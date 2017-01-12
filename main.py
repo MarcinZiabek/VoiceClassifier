@@ -1,16 +1,11 @@
 from voice import Voice
 from sample import Sample
 
-
-
-
-
-
-
-print("Preparing voices and analysis")
+from tester import Tester
+from settings import *
 
 predictions = Tester().perform_analysis()
-
+print("aa")
 
 """	
 

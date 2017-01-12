@@ -3,7 +3,7 @@ import glob
 from cache import Cache
 from sample import Sample
 
-from settings import DATA_PATH
+from settings import Settings
 
 
 class Voice():
@@ -13,7 +13,7 @@ class Voice():
 		self.samples = []
 
 	def get_folder_path(self):
-		    return "{0}/{1}/*.flac".format(DATA_PATH, self.id)
+		    return "{0}/{1}/*.flac".format(Settings.DATA_PATH, self.id)
 
 	def read_samples(self):
 		cache = Cache(self.id)

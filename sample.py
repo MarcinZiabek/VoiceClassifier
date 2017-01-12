@@ -3,7 +3,7 @@ import soundfile
 from spectrum import Spectrum
 from filters import PreemphasisFilter, LogPowerFilter
 
-from settings import APPLY_PREEMPHASIS, PREEMPHASIS, APPLY_LOG_POWER
+from settings import Settings
 
 
 class Sample():
@@ -12,14 +12,14 @@ class Sample():
 
 		data, frequency = self.read_file()
 
-		if APPLY_PREEMPHASIS:
-			data = PreemphasisFilter.apply(PREEMPHASIS, data)
+		if Settings.APPLY_PREEMPHASIS:
+			data = PreemphasisFilter.apply(Settings.PREEMPHASIS, data)
 
 		spectrum = Spectrum.from_data(frequency, data)
 
 		self.features = spectrum.power
 
-		if APPLY_LOG_POWER:
+		if Settings.APPLY_LOG_POWER:
 			self.features = LogPowerFilter.apply(self.features)
 
 	def read_file(self):

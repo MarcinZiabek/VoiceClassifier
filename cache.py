@@ -1,7 +1,7 @@
 import os
 import pickle
 
-from settings import CACHE_PATH, CACHE_ENABLED
+from settings import Settings
 
 
 class Cache():
@@ -9,13 +9,13 @@ class Cache():
 		self.id = id
 
 	def get_path(self):
-		return "{0}/{1}.json".format(CACHE_PATH, self.id)
+		return "{0}/{1}.json".format(Settings.CACHE_PATH, self.id)
 
 	def exists(self):
 		return os.path.exists(self.get_path())
 
 	def get(self, func):
-		if not self.exists() and (not CACHE_ENABLED):
+		if not self.exists() and (not Settings.CACHE_ENABLED):
 			result = func()
 			self.set(result)
 			return result

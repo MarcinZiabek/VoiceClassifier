@@ -1,6 +1,6 @@
 from scipy import signal
 
-from settings import FFT_COMPONENTS
+from settings import Settings
 
 
 class Spectrum():
@@ -10,7 +10,7 @@ class Spectrum():
 
 	@staticmethod
 	def from_data(frequency, data):
-		frequencies, power = signal.welch(data, fs=frequency, nperseg=FFT_COMPONENTS*2)
+		frequencies, power = signal.welch(data, fs=frequency, nperseg=Settings.FFT_COMPONENTS*2)
 		result = Spectrum(frequencies, power)
 
 		return result
