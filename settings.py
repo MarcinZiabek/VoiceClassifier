@@ -30,7 +30,25 @@ class Settings():
 	""" LEARNING """
 
 	from sklearn.decomposition import PCA, FactorAnalysis, FastICA, TruncatedSVD
+	AVAILABLE_DECOMPOSITION_ALGORITHMS = [
+		PCA, 
+		FactorAnalysis, 
+		FastICA, 
+		TruncatedSVD
+	]
+
 	from sklearn.neighbors import KNeighborsClassifier
+	from sklearn.naive_bayes import GaussianNB
+	from sklearn.ensemble import AdaBoostClassifier
+	from sklearn.ensemble import RandomForestClassifier
+	from sklearn.tree import DecisionTreeClassifier
+	AVAILABLE_CLASSIFIER_ALGORITHMS = [
+		KNeighborsClassifier, 
+		GaussianNB, 
+		AdaBoostClassifier, 
+		RandomForestClassifier, 
+		DecisionTreeClassifier
+	]
 
 	DECOMPOSITION_ALGORITHM = FastICA # algorithm used for simplify FFT vector into shorter vector of components
 	DECOMPOSITION_COMPONENTS = 32 # length of the vector that describes each of samples

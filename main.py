@@ -5,6 +5,12 @@ from tester import Tester
 from settings import Settings
 
 
+def save_result_to_file(filename, data):
+	with open(filename, "w+") as file:
+		for line in data:
+			file.write("{0}\t{1}\n".format(line[0], line[1]))
+
+
 def percentage_of_correct_hits_in_function_of_learning_samples():
 
 	def check_percentage(number_of_learning_samples):
@@ -27,15 +33,24 @@ def percentage_of_correct_hits_in_function_of_learning_samples():
 		
 		return hits / all
 
-	return [(n, check_percentage(n)) for n in range(1, 76)]
+	return [(n, check_percentage(n)) for n in range(1, 50)]
 
 
-data = percentage_of_correct_hits_in_function_of_learning_samples()
+def percentage_of_correct_hits_in_function_of_learning_samples_in_function_of_classifier_algorithm():
+
+	for algorithm in Settings.AVAILABLE_CLASSIFIER_ALGORITHMS:
+		Settings.CLASSIFIER_ALGORITHM = algorithm
+		data = percentage_of_correct_hits_in_function_of_learning_samples()
+
+		save_result_to_file(str(algorithm.__name__), data)
+
+
+#data = percentage_of_correct_hits_in_function_of_learning_samples()
+#save_result_to_file("percentage.txt", data)
+
+percentage_of_correct_hits_in_function_of_learning_samples_in_function_of_classifier_algorithm()
 
 print("====================================")
-
-for n, h in data:
-	print(n, h)
 
 
 """	
