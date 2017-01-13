@@ -2,10 +2,41 @@ from voice import Voice
 from sample import Sample
 
 from tester import Tester
-from settings import *
+from settings import Settings
 
-predictions = Tester().perform_analysis()
-print("aa")
+
+def percentage_of_correct_hits_in_function_of_learning_samples():
+
+	def check_percentage(number_of_learning_samples):
+		Settings.SAMPLES_TO_LEARN = number_of_learning_samples
+
+		predictions = Tester().perform_analysis()
+
+		hits = 0
+		all = 0
+
+		for data in predictions:
+			voice = data["voice"]
+			predictions = data["predictions"]
+
+			for prediction in predictions:
+				if prediction == voice:
+					hits += 1
+
+				all += 1
+		
+		return hits / all
+
+	return [(n, check_percentage(n)) for n in range(1, 76)]
+
+
+data = percentage_of_correct_hits_in_function_of_learning_samples()
+
+print("====================================")
+
+for n, h in data:
+	print(n, h)
+
 
 """	
 

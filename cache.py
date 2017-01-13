@@ -15,7 +15,7 @@ class Cache():
 		return os.path.exists(self.get_path())
 
 	def get(self, func):
-		if not self.exists() and (not Settings.CACHE_ENABLED):
+		if not self.exists() or (not Settings.CACHE_ENABLED):
 			result = func()
 			self.set(result)
 			return result

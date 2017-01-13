@@ -28,7 +28,7 @@ class Tester():
 	
 	def load_voices(self):
 		self.log_action("loading {0} voices".format(Settings.NUMBER_OF_VOICES))
-		self.voices = [Voice(i) for i in range(1, Settings.NUMBER_OF_VOICES+1)]
+		self.voices = [Voice(i) for i in range(0, Settings.NUMBER_OF_VOICES)]
 
 	def load_samples(self):
 		self.log_action("loading samples")
@@ -61,29 +61,31 @@ class Tester():
 		for voice in self.voices:
 			self.log_action(voice.id)
 
-			samples_to_predict = voice.samples[Settings.SAMPLES_TO_LEARN:(Settings.NUMBER_OF_VOICES+1)]
+			samples_to_predict = voice.samples[Settings.SAMPLES_TO_LEARN:(Settings.NUMBER_OF_SAMPLES+1)]
 
 			features = [sample.features for sample in samples_to_predict]
 			features = self.analyser.transform(features)
-			predictions = self.classifier.predict_proba(features)
+			predictions = self.classifier.predict(features)
+			propabilities_raw = self.classifier.predict_proba(features)
 
-			predictions_result = []
+			propabilities = []
 
-			for prediction in predictions:
+			for probability in propabilities_raw:
 				p = []
-				length = len(prediction)
+				length = len(probability)
 
 				for i in range(0, length):
 					p += [{
 						"voice": i,
-						"propability": prediction[i]
+						"value": probability[i]
 					}]
 
-				predictions_result += [p]
+				propabilities += [p]
 
 			result_predictions += [{
-				"voice": voice.id-1,
-				"predictions": predictions_result
+				"voice": voice.id,
+				"predictions": predictions,
+				"propabilities": propabilities
 			}]
 
 		return result_predictions
