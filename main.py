@@ -4,78 +4,98 @@ from sample import Sample
 from tester import Tester
 from settings import Settings
 
+def hits_ratio(number_of_learning_samples):
+	Settings.SAMPLES_TO_LEARN = number_of_learning_samples
 
-def save_result_to_file(filename, data):
-	with open(filename, "w+") as file:
-		for line in data:
-			file.write("{0}\t{1}\n".format(line[0], line[1]))
+	predictions = Tester().perform_analysis()
 
+	hits = 0
+	all = 0
 
-def percentage_of_correct_hits_in_function_of_learning_samples():
+	for data in predictions:
+		voice = data["voice"]
+		predictions = data["predictions"]
 
-	def check_percentage(number_of_learning_samples):
-		Settings.SAMPLES_TO_LEARN = number_of_learning_samples
+		for prediction in predictions:
+			if prediction == voice:
+				hits += 1
 
-		predictions = Tester().perform_analysis()
-
-		hits = 0
-		all = 0
-
-		for data in predictions:
-			voice = data["voice"]
-			predictions = data["predictions"]
-
-			for prediction in predictions:
-				if prediction == voice:
-					hits += 1
-
-				all += 1
+			all += 1
 		
-		return hits / all
-
-	return [(n, check_percentage(n)) for n in range(1, 50)]
+	return hits / all
 
 
-def percentage_of_correct_hits_in_function_of_learning_samples_in_function_of_classifier_algorithm():
+def hits_ratio_range(sample_range):
+	return [hits_ratio(n) for n in sample_range]
 
-	for algorithm in Settings.AVAILABLE_CLASSIFIER_ALGORITHMS:
+
+def save_result_to_file(filename, column_names=[], columns=[]):
+
+	def write_line(file, columns):
+		line = "\t".join([str(cell) for cell in columns]) + "\n"
+		file.write(line)
+
+	with open(str(filename), "w+") as file:
+		write_line(file, column_names)
+
+		zipped = zip(*columns)
+
+		for column in zipped:
+			write_line(file, column)
+
+
+def hits_ratio_in_function_of_decomposition_components():
+
+	sample_range = list(range(1, 51))
+
+	components_range = [4, 8, 16, 32, 48, 64, 96, 128]
+	column_names = ["N"] + [str(N) for N in components_range]
+	columns = [sample_range]
+
+	for N in components_range:
+		Settings.DECOMPOSITION_COMPONENTS = N
+
+		data = hits_ratio_range(sample_range)
+		columns += [data]
+
+	save_result_to_file("hits_ratio_in_function_of_decomposition_components.txt", column_names, columns)
+
+
+def hits_ratio_in_function_of_decomposition_algorithm():
+
+	sample_range = list(range(1, 51))
+
+	algorithms = Settings.AVAILABLE_DECOMPOSITION_ALGORITHMS
+	column_names = ["N"] + [str(algorithm.__name__) for algorithm in algorithms]
+	columns = [sample_range]
+
+	for algorithm in algorithms:
+		Settings.DECOMPOSITION_ALGORITHM = algorithm
+
+		data = hits_ratio_range(sample_range)
+		columns += [data]
+
+	save_result_to_file("hits_ratio_in_function_of_decomposition_algorithm.txt", column_names, columns)
+
+
+def hits_ratio_in_function_of_classifier_algorithm():
+
+	sample_range = list(range(1, 51))
+
+	algorithms = Settings.AVAILABLE_CLASSIFIER_ALGORITHMS
+	column_names = ["N"] + [str(algorithm.__name__) for algorithm in algorithms]
+	columns = [sample_range]
+
+	for algorithm in algorithms:
 		Settings.CLASSIFIER_ALGORITHM = algorithm
-		data = percentage_of_correct_hits_in_function_of_learning_samples()
 
-		save_result_to_file(str(algorithm.__name__), data)
+		data = hits_ratio_range(sample_range)
+		columns += [data]
 
-
-#data = percentage_of_correct_hits_in_function_of_learning_samples()
-#save_result_to_file("percentage.txt", data)
-
-percentage_of_correct_hits_in_function_of_learning_samples_in_function_of_classifier_algorithm()
-
-print("====================================")
+	save_result_to_file("hits_ratio_in_function_of_classifier_algorithm.txt", column_names, columns)
 
 
-"""	
 
-for r in res:
-	res_d = []
-
-	probability += r[voice.id-1]
-	selected += len([s for s in r if s!=0])
-
-	for i in range(0, len(r)):
-		res_d += [{
-			"index": i+1,
-			"value": r[i]
-		}]
-
-	v = sorted(res_d, key=lambda x: x["value"], reverse=True)
-
-	if v[0]["index"] == voice.id:
-		ok_1 += 1
-
-	all += 1
-
-print("probability: {0} %".format(probability*100.0/all))
-print("selected: {0}".format(selected/all))
-print("{0} / {1}: {2} %".format(ok_1, all, ok_1*100.0/all))
-
-"""
+hits_ratio_in_function_of_decomposition_components()
+hits_ratio_in_function_of_decomposition_algorithm()
+hits_ratio_in_function_of_classifier_algorithm()

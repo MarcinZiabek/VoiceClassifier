@@ -66,26 +66,12 @@ class Tester():
 			features = [sample.features for sample in samples_to_predict]
 			features = self.analyser.transform(features)
 			predictions = self.classifier.predict(features)
-			propabilities_raw = self.classifier.predict_proba(features)
-
-			propabilities = []
-
-			for probability in propabilities_raw:
-				p = []
-				length = len(probability)
-
-				for i in range(0, length):
-					p += [{
-						"voice": i,
-						"value": probability[i]
-					}]
-
-				propabilities += [p]
+			propabilities = self.classifier.predict_proba(features)
 
 			result_predictions += [{
 				"voice": voice.id,
 				"predictions": predictions,
-				"propabilities": propabilities
+				"propability": propabilities[voice.id]
 			}]
 
 		return result_predictions

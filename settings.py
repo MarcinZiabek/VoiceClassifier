@@ -29,33 +29,33 @@ class Settings():
 
 	""" LEARNING """
 
+	# list of all available decomposition algorithms
 	from sklearn.decomposition import PCA, FactorAnalysis, FastICA, TruncatedSVD
 	AVAILABLE_DECOMPOSITION_ALGORITHMS = [
-		PCA, 
+		PCA,
 		FactorAnalysis, 
 		FastICA, 
 		TruncatedSVD
 	]
 
+	# list of all available classifier algorithms
 	from sklearn.neighbors import KNeighborsClassifier
 	from sklearn.naive_bayes import GaussianNB
-	from sklearn.ensemble import AdaBoostClassifier
 	from sklearn.ensemble import RandomForestClassifier
 	from sklearn.tree import DecisionTreeClassifier
 	AVAILABLE_CLASSIFIER_ALGORITHMS = [
 		KNeighborsClassifier, 
-		GaussianNB, 
-		AdaBoostClassifier, 
+		GaussianNB,
 		RandomForestClassifier, 
 		DecisionTreeClassifier
 	]
 
-	DECOMPOSITION_ALGORITHM = FastICA # algorithm used for simplify FFT vector into shorter vector of components
+	DECOMPOSITION_ALGORITHM = PCA # algorithm used for simplify FFT vector into shorter vector of components
 	DECOMPOSITION_COMPONENTS = 32 # length of the vector that describes each of samples
 
-	CLASSIFIER_ALGORITHM = KNeighborsClassifier # algorithm used for classify samples as appropriate voices
+	CLASSIFIER_ALGORITHM = GaussianNB # algorithm used for classify samples as appropriate voices
 
-	SAMPLES_TO_LEARN = 5 # number of samples to learn
+	SAMPLES_TO_LEARN = 10 # number of samples to learn
 
 
 	""" OTHER """
