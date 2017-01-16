@@ -21,16 +21,9 @@ def hits_ratio(number_of_learning_samples):
 	return hits / all
 
 
-def analyse_for_size(N, function):
 
-	def result():
-		return function(N)
 
-	return result
-
-def analyse_range(sample_range, function):
-	return [function(n) for n in sample_range]
-
+""" HELPERS """
 
 def save_result_to_file(filename, column_names=[], columns=[]):
 
@@ -49,8 +42,7 @@ def save_result_to_file(filename, column_names=[], columns=[]):
 			write_line(file, column)
 
 
-
-
+""" FINDING THE BEST PAIRS (DECOMPOSITION, CLASSIFIER) OF ALGORITHMS """
 
 def check_algorithms(analysis_function, number_of_learning_samples):
 	decompositors = Settings.AVAILABLE_DECOMPOSITION_ALGORITHMS
@@ -75,10 +67,43 @@ def check_algorithms(analysis_function, number_of_learning_samples):
 	filename = "{0}_different_algorithms_N_{1}.txt".format(analysis_function.__name__, N)
 	save_result_to_file(filename, column_names, columns)
 
-
 def check_algorithms_range():
 	for N in [1, 5, 10, 15, 25, 50]:
 		check_algorithms(hits_ratio, N)
+
+
+""" ANALYSING ALGORITHMS IN FUNCTION OF NUMBER OF LEARNING SAMPLES """
+
+from sklearn.decomposition import PCA, FactorAnalysis, FastICA
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+
+def check_algorithm_pairs(algorithm_pair, analysis_function):
+	column_names = ["N"] + ["{0}_{1}".format(pair[0].__name__, pair[1].__name__) for pair in algorithm_pair]
+	columns = [list(range(1, 65))]
+
+	for pair in algorithm_pair:
+		Settings.DECOMPOSITION_ALGORITHM = pair[0]
+		Settings.CLASSIFIER_ALGORITHM = pair[1]
+
+		columns += [[analysis_function(N) for N in range(1, 65)]]
+
+	filename = "algorithms_number_of_learning_samples.txt"
+	save_result_to_file(filename, column_names, columns)
+
+algorithm_pairs = [
+	(FastICA, GaussianNB),
+	(FactorAnalysis, GaussianNB),
+	(PCA, GaussianNB),
+	(FastICA, KNeighborsClassifier),
+	(FactorAnalysis, KNeighborsClassifier),
+]
+
+
+""" ANALYSIS """
+
+#check_algorithms_range()
+check_algorithm_pairs(algorithm_pairs, hits_ratio)
 
 #hits_ratio_range = analyse_range(hits_ratio)
 #hits_ratio_range = analyse_for_size(1, hits_ratio)
