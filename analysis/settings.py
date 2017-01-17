@@ -1,5 +1,6 @@
 import os
 
+
 class Settings():
 
 	""" PATHS AND FOLDERS """
@@ -7,7 +8,7 @@ class Settings():
 	CURRENT_PATH = os.path.dirname(os.path.abspath(__file__))
 	DATA_PATH = CURRENT_PATH + "/database"
 	CACHE_PATH = CURRENT_PATH + "/cache"
-	ANALYSIS_PATH = CURRENT_PATH + "/analysis"
+	ANALYSIS_PATH = CURRENT_PATH + "/result"
 
 
 	""" DATABASE OF VOICES """

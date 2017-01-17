@@ -1,7 +1,7 @@
 import os
 import pickle
 
-from settings import Settings
+from analysis.settings import Settings
 
 
 class Cache():

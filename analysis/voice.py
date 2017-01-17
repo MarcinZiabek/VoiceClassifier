@@ -1,9 +1,9 @@
 import glob
 
-from cache import Cache
-from sample import Sample
+from analysis.cache import Cache
+from analysis.sample import Sample
 
-from settings import Settings
+from analysis.settings import Settings
 
 
 class Voice():

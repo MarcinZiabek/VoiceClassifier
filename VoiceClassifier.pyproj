@@ -23,24 +23,25 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="cache.py">
+    <Compile Include="analysis\cache.py" />
+    <Compile Include="analysis\filters\log_power.py" />
+    <Compile Include="analysis\filters\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="analysis\filters\preemphasis.py" />
+    <Compile Include="analysis\sample.py" />
+    <Compile Include="analysis\settings.py" />
+    <Compile Include="analysis\spectrum.py" />
+    <Compile Include="analysis\tester.py" />
+    <Compile Include="analysis\voice.py" />
+    <Compile Include="analysis\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="main.py" />
-    <Compile Include="filters\log_power.py" />
-    <Compile Include="filters\preemphasis.py" />
-    <Compile Include="filters\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="sample.py" />
-    <Compile Include="settings.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="spectrum.py" />
-    <Compile Include="tester.py" />
-    <Compile Include="voice.py" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="analysis\" />
+    <Folder Include="analysis\filters\" />
     <Folder Include="database\" />
     <Folder Include="database\10\" />
     <Folder Include="database\11\" />
@@ -67,7 +68,6 @@
     <Folder Include="database\7\" />
     <Folder Include="database\8\" />
     <Folder Include="database\9\" />
-    <Folder Include="filters\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="database\10\nld-0173b0b9.flac" />

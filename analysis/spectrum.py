@@ -1,6 +1,6 @@
 from scipy import signal
 
-from settings import Settings
+from analysis.settings import Settings
 
 
 class Spectrum():

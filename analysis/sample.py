@@ -1,9 +1,9 @@
 import soundfile
 
-from spectrum import Spectrum
-from filters import PreemphasisFilter, LogPowerFilter
+from analysis.spectrum import Spectrum
+from analysis.filters import PreemphasisFilter, LogPowerFilter
 
-from settings import Settings
+from analysis.settings import Settings
 
 
 class Sample():

@@ -1,10 +1,6 @@
 import numpy
 
-from voice import Voice
-from sample import Sample
-
-from tester import Tester
-from settings import Settings
+from analysis import Settings, Tester
 
 
 """ HELPERS """

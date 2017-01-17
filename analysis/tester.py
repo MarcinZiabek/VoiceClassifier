@@ -1,13 +1,9 @@
 import numpy
 
-from voice import Voice
-from sample import Sample
+from analysis.voice import Voice
+from analysis.sample import Sample
 
-from settings import Settings
-
-class Prediction():
-	def __init__(self, voice, predictions):
-		pass
+from analysis.settings import Settings
 
 
 class Tester():
