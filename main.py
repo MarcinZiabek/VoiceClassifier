@@ -1,3 +1,5 @@
+import numpy
+
 from voice import Voice
 from sample import Sample
 
@@ -14,14 +16,16 @@ def hits_ratio(number_of_learning_samples):
 	all = 0
 
 	for data in predictions:
-		voice = data["voice"]
 		hits += data["correct_prediction"]
 		all += data["samples"]
 
 	return hits / all
 
+def propability(number_of_learning_samples):
+	Settings.SAMPLES_TO_LEARN = number_of_learning_samples
 
-
+	predictions = Tester().perform_analysis()
+	return numpy.average([data["propability"] for data in predictions])
 
 """ HELPERS """
 
@@ -99,17 +103,23 @@ algorithm_pairs = [
 	(FactorAnalysis, KNeighborsClassifier),
 ]
 
+""" HIT RATIO VS PROPABILITY """
+
+def check_algorithm_propability(algorithm_pair, analysis_function):
+	column_names = ["N"] + ["{0}_{1}".format(pair[0].__name__, pair[1].__name__) for pair in algorithm_pair]
+	columns = [list(range(1, 65))]
+
+	for pair in algorithm_pair:
+		Settings.DECOMPOSITION_ALGORITHM = pair[0]
+		Settings.CLASSIFIER_ALGORITHM = pair[1]
+
+		columns += [[analysis_function(N) for N in range(1, 65)]]
+
+	filename = "algorithms_propability_number_of_learning_samples.txt"
+	save_result_to_file(filename, column_names, columns)
 
 """ ANALYSIS """
 
 #check_algorithms_range()
-check_algorithm_pairs(algorithm_pairs, hits_ratio)
-
-#hits_ratio_range = analyse_range(hits_ratio)
-#hits_ratio_range = analyse_for_size(1, hits_ratio)
-
-
-
-#hits_ratio_in_function_of_decomposition_components(hits_ratio_range)
-#hits_ratio_in_function_of_decomposition_algorithm(hits_ratio_range)
-#hits_ratio_in_function_of_classifier_algorithm(hits_ratio_range)
+#check_algorithm_pairs(algorithm_pairs, hits_ratio)
+check_algorithm_propability(algorithm_pairs, propability)

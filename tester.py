@@ -1,3 +1,5 @@
+import numpy
+
 from voice import Voice
 from sample import Sample
 
@@ -75,8 +77,7 @@ class Tester():
 				"voice": voice.id,
 				"samples": len(predictions),
 				"correct_prediction": len([1 for p in predictions if p == voice.id]),
-				"propability": propability,
-				#"non_zero_propabilities": non_zero_propabilities
+				"propability": numpy.average(propability)
 			}]
 
 		return result_predictions
