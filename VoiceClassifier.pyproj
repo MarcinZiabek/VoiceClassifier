@@ -2569,6 +2569,7 @@
     <Content Include="database\9\pol-6f62a7d4.flac" />
     <Content Include="database\9\pol-6f770712.flac" />
     <Content Include="database\9\pol-6f7c5e8a.flac" />
+    <Content Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

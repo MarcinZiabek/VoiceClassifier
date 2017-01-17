@@ -57,12 +57,12 @@ def test_algorithms(property, number_of_learning_samples):
 	save_result_to_file(filename, column_names, columns)
 
 
-def check_algorithms_range():
+def test_algorithms_range():
 	for N in [1, 5, 10, 15, 25, 50]:
 		test_algorithms(hits_ratio, N)
 
 
-""" ANALYSING ALGORITHMS IN FUNCTION OF NUMBER OF LEARNING SAMPLES """
+""" NUMBER OF LEARNING SAMPLES """
 
 from sklearn.decomposition import PCA, FactorAnalysis, FastICA
 from sklearn.neighbors import KNeighborsClassifier
@@ -88,22 +88,6 @@ algorithm_pairs = [
 	(FastICA, KNeighborsClassifier),
 	(FactorAnalysis, KNeighborsClassifier),
 ]
-
-
-""" PROBABILITY """
-
-def test_probability(algorithm_pair, property):
-	column_names = ["N"] + ["{0}_{1}".format(pair[0].__name__, pair[1].__name__) for pair in algorithm_pair]
-	columns = [list(range(1, 65))]
-
-	for pair in algorithm_pair:
-		Settings.DECOMPOSITION_ALGORITHM = pair[0]
-		Settings.CLASSIFIER_ALGORITHM = pair[1]
-
-		columns += [[analyse(property, learning_samples=N) for N in range(1, 65)]]
-
-	filename = "algorithms_{0}_number_of_learning_samples.txt".format(property)
-	save_result_to_file(filename, column_names, columns)
 
 
 """ NUMBER OF COMPONENTS """
@@ -140,8 +124,7 @@ def test_voices(algorithm_pair, property):
 
 """ ANALYSIS """
 
-#check_algorithms_range()
-#check_algorithm_pairs(algorithm_pairs, hits_ratio)
-#check_algorithm_property(algorithm_pairs, "correct_prediction_std")
+#test_algorithms_range()
+#test_learning_samples(algorithm_pairs, hits_ratio)
 #test_components(algorithm_pairs, "correct_prediction")
-test_voices(algorithm_pairs, "correct_prediction")
+#test_voices(algorithm_pairs, "correct_prediction")
