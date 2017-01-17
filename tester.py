@@ -71,13 +71,14 @@ class Tester():
 
 			propabilities = self.classifier.predict_proba(features)
 			propability = [propability[voice.id] for propability in propabilities]
-			#non_zero_propabilities = len([1 for p in propabilities if p != 0])
+			non_zero_propabilities = numpy.average([len([p for p in prediction if p > 10**-3]) for prediction in propabilities])
 
 			result_predictions += [{
 				"voice": voice.id,
 				"samples": len(predictions),
 				"correct_prediction": len([1 for p in predictions if p == voice.id]),
-				"propability": numpy.average(propability)
+				"propability": numpy.average(propability),
+				"non_zero_predictions": non_zero_propabilities
 			}]
 
 		return result_predictions

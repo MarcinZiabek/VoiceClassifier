@@ -27,6 +27,12 @@ def propability(number_of_learning_samples):
 	predictions = Tester().perform_analysis()
 	return numpy.average([data["propability"] for data in predictions])
 
+def non_zero(number_of_learning_samples):
+	Settings.SAMPLES_TO_LEARN = number_of_learning_samples
+
+	predictions = Tester().perform_analysis()
+	return numpy.average([data["non_zero_predictions"] for data in predictions])
+
 """ HELPERS """
 
 def save_result_to_file(filename, column_names=[], columns=[]):
@@ -118,8 +124,22 @@ def check_algorithm_propability(algorithm_pair, analysis_function):
 	filename = "algorithms_propability_number_of_learning_samples.txt"
 	save_result_to_file(filename, column_names, columns)
 
+def check_algorithm_nonzero(algorithm_pair, analysis_function):
+	column_names = ["N"] + ["{0}_{1}".format(pair[0].__name__, pair[1].__name__) for pair in algorithm_pair]
+	columns = [list(range(1, 65))]
+
+	for pair in algorithm_pair:
+		Settings.DECOMPOSITION_ALGORITHM = pair[0]
+		Settings.CLASSIFIER_ALGORITHM = pair[1]
+
+		columns += [[analysis_function(N) for N in range(1, 65)]]
+
+	filename = "algorithms_nonzero_number_of_learning_samples.txt"
+	save_result_to_file(filename, column_names, columns)
+
 """ ANALYSIS """
 
 #check_algorithms_range()
 #check_algorithm_pairs(algorithm_pairs, hits_ratio)
-check_algorithm_propability(algorithm_pairs, propability)
+#check_algorithm_propability(algorithm_pairs, propability)
+check_algorithm_nonzero(algorithm_pairs, non_zero)
