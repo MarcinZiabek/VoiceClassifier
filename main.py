@@ -7,33 +7,14 @@ from tester import Tester
 from settings import Settings
 
 
-def hits_ratio(number_of_learning_samples):
-	Settings.SAMPLES_TO_LEARN = number_of_learning_samples
-
-	predictions = Tester().perform_analysis()
-
-	hits = 0
-	all = 0
-
-	for data in predictions:
-		hits += data["correct_prediction"]
-		all += data["samples"]
-
-	return hits / all
-
-def propability(number_of_learning_samples):
-	Settings.SAMPLES_TO_LEARN = number_of_learning_samples
-
-	predictions = Tester().perform_analysis()
-	return numpy.average([data["propability"] for data in predictions])
-
-def non_zero(number_of_learning_samples):
-	Settings.SAMPLES_TO_LEARN = number_of_learning_samples
-
-	predictions = Tester().perform_analysis()
-	return numpy.average([data["non_zero_predictions"] for data in predictions])
-
 """ HELPERS """
+
+def analyse(number_of_learning_samples, property):
+	Settings.SAMPLES_TO_LEARN = number_of_learning_samples
+
+	predictions = Tester().perform_analysis()
+	return predictions[property]
+
 
 def save_result_to_file(filename, column_names=[], columns=[]):
 
@@ -54,7 +35,7 @@ def save_result_to_file(filename, column_names=[], columns=[]):
 
 """ FINDING THE BEST PAIRS (DECOMPOSITION, CLASSIFIER) OF ALGORITHMS """
 
-def check_algorithms(analysis_function, number_of_learning_samples):
+def test_algorithms(property, number_of_learning_samples):
 	decompositors = Settings.AVAILABLE_DECOMPOSITION_ALGORITHMS
 	classifiers = Settings.AVAILABLE_CLASSIFIER_ALGORITHMS
 
@@ -70,16 +51,17 @@ def check_algorithms(analysis_function, number_of_learning_samples):
 		for decompositor in decompositors:
 			Settings.DECOMPOSITION_ALGORITHM = decompositor
 
-			column += [analysis_function(N)]
+			column += [analyse(N, property)]
 
 		columns += [column]
 
-	filename = "{0}_different_algorithms_N_{1}.txt".format(analysis_function.__name__, N)
+	filename = "{0}_different_algorithms_N_{1}_{2}.txt".format(analysis_function.__name__, N, property)
 	save_result_to_file(filename, column_names, columns)
+
 
 def check_algorithms_range():
 	for N in [1, 5, 10, 15, 25, 50]:
-		check_algorithms(hits_ratio, N)
+		test_algorithms(hits_ratio, N)
 
 
 """ ANALYSING ALGORITHMS IN FUNCTION OF NUMBER OF LEARNING SAMPLES """
@@ -88,7 +70,7 @@ from sklearn.decomposition import PCA, FactorAnalysis, FastICA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 
-def check_algorithm_pairs(algorithm_pair, analysis_function):
+def test_learning_samples(algorithm_pair, property):
 	column_names = ["N"] + ["{0}_{1}".format(pair[0].__name__, pair[1].__name__) for pair in algorithm_pair]
 	columns = [list(range(1, 65))]
 
@@ -96,9 +78,9 @@ def check_algorithm_pairs(algorithm_pair, analysis_function):
 		Settings.DECOMPOSITION_ALGORITHM = pair[0]
 		Settings.CLASSIFIER_ALGORITHM = pair[1]
 
-		columns += [[analysis_function(N) for N in range(1, 65)]]
+		columns += [[analyse(N, property) for N in range(1, 65)]]
 
-	filename = "algorithms_number_of_learning_samples.txt"
+	filename = "algorithms_number_of_learning_samples_{0}.txt".format(property)
 	save_result_to_file(filename, column_names, columns)
 
 algorithm_pairs = [
@@ -109,9 +91,9 @@ algorithm_pairs = [
 	(FactorAnalysis, KNeighborsClassifier),
 ]
 
-""" HIT RATIO VS PROPABILITY """
+""" HIT RATIO VS PROBABILITY """
 
-def check_algorithm_propability(algorithm_pair, analysis_function):
+def test_probability(algorithm_pair, property):
 	column_names = ["N"] + ["{0}_{1}".format(pair[0].__name__, pair[1].__name__) for pair in algorithm_pair]
 	columns = [list(range(1, 65))]
 
@@ -119,27 +101,13 @@ def check_algorithm_propability(algorithm_pair, analysis_function):
 		Settings.DECOMPOSITION_ALGORITHM = pair[0]
 		Settings.CLASSIFIER_ALGORITHM = pair[1]
 
-		columns += [[analysis_function(N) for N in range(1, 65)]]
+		columns += [[analyse(N, property) for N in range(1, 65)]]
 
-	filename = "algorithms_propability_number_of_learning_samples.txt"
-	save_result_to_file(filename, column_names, columns)
-
-def check_algorithm_nonzero(algorithm_pair, analysis_function):
-	column_names = ["N"] + ["{0}_{1}".format(pair[0].__name__, pair[1].__name__) for pair in algorithm_pair]
-	columns = [list(range(1, 65))]
-
-	for pair in algorithm_pair:
-		Settings.DECOMPOSITION_ALGORITHM = pair[0]
-		Settings.CLASSIFIER_ALGORITHM = pair[1]
-
-		columns += [[analysis_function(N) for N in range(1, 65)]]
-
-	filename = "algorithms_nonzero_number_of_learning_samples.txt"
+	filename = "algorithms_{0}_number_of_learning_samples.txt".format(property)
 	save_result_to_file(filename, column_names, columns)
 
 """ ANALYSIS """
 
 #check_algorithms_range()
 #check_algorithm_pairs(algorithm_pairs, hits_ratio)
-#check_algorithm_propability(algorithm_pairs, propability)
-check_algorithm_nonzero(algorithm_pairs, non_zero)
+check_algorithm_property(algorithm_pairs, "correct_prediction_std")

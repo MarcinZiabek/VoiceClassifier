@@ -67,18 +67,34 @@ class Tester():
 
 			features = [sample.features for sample in samples_to_predict]
 			features = self.analyser.transform(features)
+
 			predictions = self.classifier.predict(features)
+			probabilities = self.classifier.predict_proba(features)
 
-			propabilities = self.classifier.predict_proba(features)
-			propability = [propability[voice.id] for propability in propabilities]
-			non_zero_propabilities = numpy.average([len([p for p in prediction if p > 10**-3]) for prediction in propabilities])
+			result_predictions += [self.analyse_voice_predictions(voice.id, predictions, probabilities)]
 
-			result_predictions += [{
-				"voice": voice.id,
-				"samples": len(predictions),
-				"correct_prediction": len([1 for p in predictions if p == voice.id]),
-				"propability": numpy.average(propability),
-				"non_zero_predictions": non_zero_propabilities
-			}]
+		return self.analyse_predictions(result_predictions)
 
-		return result_predictions
+	def analyse_voice_predictions(self, voice_id, predictions, probabilities):
+		correct_prediction = numpy.average([1 if p == voice_id else 0 for p in predictions])
+		probability = numpy.average([p[voice_id] for p in probabilities])
+		non_zero_probabilities = numpy.average([len([p for p in probability if p > 10**-3]) for probability in probabilities])
+
+		return {
+			"voice": voice_id,
+			"correct_prediction": correct_prediction,
+			"probability": probability,
+			"non_zero_predictions": non_zero_probabilities
+		}
+
+	def analyse_predictions(self, predictions):
+		properties = ["correct_prediction", "probability", "non_zero_predictions"]
+		result = {}
+
+		for property in properties:
+			data = [p[property] for p in predictions]
+
+			result[property] = numpy.average(data)
+			result[property+"_std"] = numpy.std(data)
+
+		return result
