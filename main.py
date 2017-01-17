@@ -9,8 +9,10 @@ from settings import Settings
 
 """ HELPERS """
 
-def analyse(number_of_learning_samples, property):
-	Settings.SAMPLES_TO_LEARN = number_of_learning_samples
+def analyse(property, learning_samples=25, components=32, voices=25):
+	Settings.NUMBER_OF_VOICES = voices
+	Settings.SAMPLES_TO_LEARN = learning_samples
+	Settings.DECOMPOSITION_COMPONENTS = components
 
 	predictions = Tester().perform_analysis()
 	return predictions[property]
@@ -51,7 +53,7 @@ def test_algorithms(property, number_of_learning_samples):
 		for decompositor in decompositors:
 			Settings.DECOMPOSITION_ALGORITHM = decompositor
 
-			column += [analyse(N, property)]
+			column += [analyse(property, learning_samples=N)]
 
 		columns += [column]
 
@@ -78,7 +80,7 @@ def test_learning_samples(algorithm_pair, property):
 		Settings.DECOMPOSITION_ALGORITHM = pair[0]
 		Settings.CLASSIFIER_ALGORITHM = pair[1]
 
-		columns += [[analyse(N, property) for N in range(1, 65)]]
+		columns += [[analyse(property, learning_samples=N) for N in range(1, 65)]]
 
 	filename = "algorithms_number_of_learning_samples_{0}.txt".format(property)
 	save_result_to_file(filename, column_names, columns)
@@ -91,7 +93,8 @@ algorithm_pairs = [
 	(FactorAnalysis, KNeighborsClassifier),
 ]
 
-""" HIT RATIO VS PROBABILITY """
+
+""" PROBABILITY """
 
 def test_probability(algorithm_pair, property):
 	column_names = ["N"] + ["{0}_{1}".format(pair[0].__name__, pair[1].__name__) for pair in algorithm_pair]
@@ -101,13 +104,48 @@ def test_probability(algorithm_pair, property):
 		Settings.DECOMPOSITION_ALGORITHM = pair[0]
 		Settings.CLASSIFIER_ALGORITHM = pair[1]
 
-		columns += [[analyse(N, property) for N in range(1, 65)]]
+		columns += [[analyse(property, learning_samples=N) for N in range(1, 65)]]
 
 	filename = "algorithms_{0}_number_of_learning_samples.txt".format(property)
 	save_result_to_file(filename, column_names, columns)
+
+
+""" NUMBER OF COMPONENTS """
+
+def test_components(algorithm_pair, property):
+	column_names = ["C"] + ["{0}_{1}".format(pair[0].__name__, pair[1].__name__) for pair in algorithm_pair]
+	columns = [list(range(1, 65))]
+
+	for pair in algorithm_pair:
+		Settings.DECOMPOSITION_ALGORITHM = pair[0]
+		Settings.CLASSIFIER_ALGORITHM = pair[1]
+
+		columns += [[analyse(property, components=N) for N in range(1, 65)]]
+
+	filename = "algorithms_{0}_number_of_components.txt".format(property)
+	save_result_to_file(filename, column_names, columns)
+
+
+""" NUMBER OF VOICES """
+
+def test_voices(algorithm_pair, property):
+	column_names = ["V"] + ["{0}_{1}".format(pair[0].__name__, pair[1].__name__) for pair in algorithm_pair]
+	columns = [list(range(1, 65))]
+
+	for pair in algorithm_pair:
+		Settings.DECOMPOSITION_ALGORITHM = pair[0]
+		Settings.CLASSIFIER_ALGORITHM = pair[1]
+
+		columns += [[analyse(property, voices=N) for N in range(1, 26)]]
+
+	filename = "algorithms_{0}_number_of_voices.txt".format(property)
+	save_result_to_file(filename, column_names, columns)
+
 
 """ ANALYSIS """
 
 #check_algorithms_range()
 #check_algorithm_pairs(algorithm_pairs, hits_ratio)
-check_algorithm_property(algorithm_pairs, "correct_prediction_std")
+#check_algorithm_property(algorithm_pairs, "correct_prediction_std")
+#test_components(algorithm_pairs, "correct_prediction")
+test_voices(algorithm_pairs, "correct_prediction")
