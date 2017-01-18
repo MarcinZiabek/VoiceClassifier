@@ -2,9 +2,11 @@
 
 This project was created to explore the basic aspects of the speaker recognition techniques: decomposition and classification algorithms and methods of analysis as well. In the following chapters, most of the gained knowledge will be discussed.
 
+Additionally, it was not indeded to be an analysis tool and should not be used in that fashion. It does not adress many important issues like data validation or correct exception handling.
+
 ## Database
 
-In order to compare various algorithms, the apprioprate database was created. It consists of 25 voices with 100 samples each. This data was collected from the Shtooka Project available at [http://shtooka.net/](http://shtooka.net/) which is a multilingual database of audio recordings of words.
+In order to compare various algorithms, the appropriate database was created. It consists of 25 voices with 100 samples each. This data was collected from the Shtooka Project available at [http://shtooka.net/](http://shtooka.net/) which is a multilingual database of audio recordings of words.
 
 ## Programming environment
 
@@ -19,8 +21,8 @@ This project is created in the Python language and uses the Anaconda library, an
 The process of analysing the voice samples is really simple and is based on the following steps:
 
 1. For all samples:
-    1. Read an audio file containing record of one word.
-    2. Use the preemphasis filter to emphasize highest frequencies.
+    1. Read an audio file containing the record of one word.
+    2. Use the preemphasis filter to emphasise highest frequencies.
     3. Perform the FFT transform on the signal.
     4. Change the Y scale from energy to decibels.
     5. Use the decomposition algorithm on the FFT to get the feature vector.
@@ -34,25 +36,25 @@ In this project were tested some of the algorithms available in the Sklearn libr
 
 Following decomposition algorithms were used:
 
-- PCA,
+- PCA (Principal Component Analysis),
 - FactorAnalysis, 
-- FastICA, 
-- TruncatedSVD.
+- FastICA (Independent Component Analysis), 
+- TruncatedSVD (Truncated Singular Value Decomposition).
 
 Following classification algorithms were used:
 
-- KNeighborsClassifier, 
-- GaussianNB,
+- KNeighborsClassifier (Nearest Neighbours), 
+- GaussianNB (Gaussian Naive Bayes),
 - RandomForestClassifier, 
 - DecisionTreeClassifier.
 
 # Results
 
-It is important to say that different algorithms are apprioprate for different scenarios. In this section, the process of finding the best techniques for gathered database will be covered.
+It is important to say that different algorithms are suitable for different scenarios. In this section, the process of finding the best techniques for given database will be covered.
 
 ## Default settings
 
-At the very beggining, the initial and default settings were choosen as following:
+At the very beginning, the initial and default settings were chosen:
 
 ```
 NUMBER_OF_VOICES = 25
@@ -70,11 +72,11 @@ SAMPLES_TO_LEARN = 10
 
 ## The best algorithms
 
-To choose the best pair of decomposition and classification alogirthms, all permutations were tested for different number of learning samples.
+To choose the best pair of decomposition and classification algorithms, all combinations were tested for a different number of learning samples.
 
 ![IMAGE ALT TEXT HERE](images/ranking.png)
 
-As you can see, 5 pairs are really interesting:
+As you can see, 5 pairs are potentially interesting:
 
 - (FastICA, GaussianNB),
 - (FactorAnalysis, GaussianNB),
@@ -84,36 +86,48 @@ As you can see, 5 pairs are really interesting:
 
 ## Predictions
 
-The Sklearn library is taking the features vector of the sample from the decomposition algorithm and thanks to the learned classification model is attaching the probabilities to every voice. Next step is choose the voice with the highest probability. This chart shows the efficiency of this method:
+At the very beginning, the feature vector of the samples is obtained via the decomposition algorithm. In the next step, this feature vector and the trained data model are used for making a prediction. The chart below shows how many many correct predictions are made in function of the size of the learning dataset:
 
 ![IMAGE ALT TEXT HERE](images/predictions.png)
 
-Next, you can find the average probability for the correct voice. As you can see, the probability of the pair (FastICA, KNeighbors) does not match the prediction rate as well as two other pairs.
+On the other hand, it is possible to create the average of the probabilities for the correct voice. As you can see, one the pairs (FastICA, KNeighbors) does not match the prediction rate from the previous chart as well as two other pairs.
 
 ![IMAGE ALT TEXT HERE](images/probability.png)
 
 ## Non-zero probabilities
 
-For vast majority of cases, the number of voices with non-zero probability is really small.
+The classification algorithms, used in this project, return the vector or probabilities for every voice for given feature vector. The vast majority of this probabilities is close to zero. The chart below shows how many voices have bigger probability than 10^-3. Of course, the best algorithm should have the value equal to one, that is the correct voice. 
+
+As you can see, there is a big difference between the classification algorithms in a function of the size of the learning dataset:
+
+- GaussianNB gives more potential voices for bigger learning dataset,
+- KNeighbors is concentrating on less potential voices for more learning samples.
+
+But, as the earlier analysis shows, the prediction accuracy of these two methods is pretty the same.
 
 ![IMAGE ALT TEXT HERE](images/non-zero.png)
 
-This image is very interesting beacause shows the very big difference between the GaussianNB and KNeighbors algorithms. The second one is choosing less potential candidates for bigger learning set when the first one is pretty stable.
+This image is very interesting because shows the very big difference between the GaussianNB and KNeighbors algorithms. The second one is choosing less potential candidates for bigger learning set when the first one is pretty stable.
 
 ## Lenght of the feature vector
 
-Using the decomposition algorithms, it is possible to shorten the FFT data into feature vector. The question is, how long should be this vector for this method, voice analysis and given dataset?
+Using the decomposition algorithms, it is possible to shorten the FFT data into a feature vector. The question is, what length is optimal for the given dataset. The most interesting conclusion is that the accuracy of prediction is not stable and can decrease for too large vectors.
 
 ![IMAGE ALT TEXT HERE](images/components.png)
 
-As you can see, the accuracy of prediction is not stable and can decrease for too large vectors.
-
 ## Number of voices
 
-The last think to discuss, is the accuracy of prediction in the function of number of voices. It is predicted that more voices will decrease the accuracy:
+The last thing to consider is the accuracy of prediction in the function of number of voices. The chart below shows that the attempt to compare a higher number of voices can decrease the accuracy:
 
 ![IMAGE ALT TEXT HERE](images/voices.png)
 
 # Conclusions
 
-In this project, many basic methods of analysis were covered. As the above charts show, it is very important to compare many available methods in due to optimize the results. By using more advanced techniques, better results can be  obtained.
+In this project, many aspects of speaker recognition are covered:
+
+1. Methods of pre-processing sound samples.
+2. Algorithms to extract the feature vector from pre-processed data (decomposition).
+3. Algorithms to create the voice model that can be used to making predictions.
+4. Ways to compare the algorithms in order to find the best ones.
+
+It is important to remember that different approaches lead to different solutions. By using more advanced techniques, better results can be obtained.
