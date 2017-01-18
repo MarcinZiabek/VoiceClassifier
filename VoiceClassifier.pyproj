@@ -24,6 +24,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="analysis\cache.py" />
+    <Compile Include="analysis\filters.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="analysis\filters\log_power.py" />
     <Compile Include="analysis\filters\__init__.py">
       <SubType>Code</SubType>

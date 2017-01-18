@@ -1,6 +1,6 @@
 # VoiceClassifier
 
-This project was created to explore the basics aspects of the speacher recognition techniques. In the following chapters most of the gained knowledge will be discussed.
+This project was created to explore the basic aspects of the speaker recognition techniques: decomposition and classification algorithms and methods of analysis as well. In the following chapters, most of the gained knowledge will be discussed.
 
 ## Database
 
@@ -116,4 +116,4 @@ The last think to discuss, is the accuracy of prediction in the function of numb
 
 # Conclusions
 
-In this project, many basic methods of analysis were covered. As the above charts show, it is very important to compare many available methods in due to optimize the results. By using more advanced techniques, better results can be obtained.
+In this project, many basic methods of analysis were covered. As the above charts show, it is very important to compare many available methods in due to optimize the results. By using more advanced techniques, better results can be  obtained.

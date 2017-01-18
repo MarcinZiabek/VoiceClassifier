@@ -53,13 +53,13 @@ def test_algorithms(property, number_of_learning_samples):
 
 		columns += [column]
 
-	filename = "{0}_different_algorithms_N_{1}_{2}.txt".format(analysis_function.__name__, N, property)
+	filename = "algorithms_SAMPLES_{0}_PROPERTY_{1}.txt".format(N, property)
 	save_result_to_file(filename, column_names, columns)
 
 
-def test_algorithms_range():
+def test_algorithms_range(property):
 	for N in [1, 5, 10, 15, 25, 50]:
-		test_algorithms(hits_ratio, N)
+		test_algorithms(property, N)
 
 
 """ NUMBER OF LEARNING SAMPLES """
@@ -78,7 +78,7 @@ def test_learning_samples(algorithm_pair, property):
 
 		columns += [[analyse(property, learning_samples=N) for N in range(1, 65)]]
 
-	filename = "algorithms_number_of_learning_samples_{0}.txt".format(property)
+	filename = "learning_samples_PROPERTY_{0}.txt".format(property)
 	save_result_to_file(filename, column_names, columns)
 
 algorithm_pairs = [
@@ -102,7 +102,7 @@ def test_components(algorithm_pair, property):
 
 		columns += [[analyse(property, components=N) for N in range(1, 65)]]
 
-	filename = "algorithms_{0}_number_of_components.txt".format(property)
+	filename = "components_PROPERTY_{0}.txt".format(property)
 	save_result_to_file(filename, column_names, columns)
 
 
@@ -118,13 +118,14 @@ def test_voices(algorithm_pair, property):
 
 		columns += [[analyse(property, voices=N) for N in range(1, 26)]]
 
-	filename = "algorithms_{0}_number_of_voices.txt".format(property)
+	filename = "voices_PROPERTY_{0}.txt".format(property)
 	save_result_to_file(filename, column_names, columns)
 
 
 """ ANALYSIS """
 
-#test_algorithms_range()
-#test_learning_samples(algorithm_pairs, hits_ratio)
+#test_algorithms_range("correct_prediction")
+#test_learning_samples(algorithm_pairs, "correct_prediction")
+#test_learning_samples(algorithm_pairs, "probability")
 #test_components(algorithm_pairs, "correct_prediction")
 #test_voices(algorithm_pairs, "correct_prediction")
