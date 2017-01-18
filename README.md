@@ -50,7 +50,7 @@ Following classification algorithms were used:
 
 # Results
 
-It is important to say that different algorithms are suitable for different scenarios. In this section, the process of finding the best techniques for given database will be covered.
+It is important to say that different algorithms are suitable for different scenarios. In this section, the process of finding the best techniques for the given database will be covered.
 
 ## Default settings
 
@@ -90,13 +90,14 @@ At the very beginning, the feature vector of the samples is obtained via the dec
 
 ![IMAGE ALT TEXT HERE](images/predictions.png)
 
-On the other hand, it is possible to create the average of the probabilities for the correct voice. As you can see, one the pairs (FastICA, KNeighbors) does not match the prediction rate from the previous chart as well as two other pairs.
+On the other hand, the classification algorithm can return the array of probabilities assigned to all voices for the given feature vector. It is possible to create the average of the probabilities for the correct voice. As you can see, one of the pairs (FastICA, KNeighbors) does not match the prediction rate from the previous chart as well as two other pairs.
+
 
 ![IMAGE ALT TEXT HERE](images/probability.png)
 
 ## Non-zero probabilities
 
-The classification algorithms, used in this project, return the vector or probabilities for every voice for given feature vector. The vast majority of this probabilities is close to zero. The chart below shows how many voices have bigger probability than 10^-3. Of course, the best algorithm should have the value equal to one, that is the correct voice. 
+The classification algorithms, used in this project, return the vector or probabilities for every voice for given feature vector. The vast majority of them is close to zero. The chart below shows how many voices have bigger probability than 10^-3. Of course, the best algorithm should have the value equal to one, that is the correct voice. 
 
 As you can see, there is a big difference between the classification algorithms in a function of the size of the learning dataset:
 
@@ -106,8 +107,6 @@ As you can see, there is a big difference between the classification algorithms 
 But, as the earlier analysis shows, the prediction accuracy of these two methods is pretty the same.
 
 ![IMAGE ALT TEXT HERE](images/non-zero.png)
-
-This image is very interesting because shows the very big difference between the GaussianNB and KNeighbors algorithms. The second one is choosing less potential candidates for bigger learning set when the first one is pretty stable.
 
 ## Lenght of the feature vector
 
